@@ -1,0 +1,22 @@
+<h1> Music-Code API</h1>
+<h3> Time Table</h3>
+<table border = 1>
+  <tr>
+    <th>TimeID</th>
+    <th>Duration</th>
+    <th>BPM</th>
+    <th>TimeMode</th>
+    <th>UserID</th>
+    <th>EventDateTime</th>
+  </tr>
+  {% for column in all_columns %}
+  <tr>
+    <td> {{column[0]}} </td>
+	<td> {{column[1]}} </td>
+    <td> {{column[2]}} </td>
+    <td> {{column[3]}} </td>
+    <td> {{column[4]}} </td>
+    <td> {{column[5]}} </td>
+  </tr>
+  {% endfor %}
+</table>

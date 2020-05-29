@@ -1,0 +1,18 @@
+<h1> Music-Code API</h1>
+<h3> Volume Table</h3>
+<table border = 1>
+  <tr>
+    <th>VolumeID</th>
+    <th>VolumeFactor</th>
+    <th>UserID</th>
+    <th>EventDateTime</th>
+  </tr>
+  {% for column in all_columns %}
+  <tr>
+    <td> {{column[0]}} </td>
+	<td> {{column[1]}} </td>
+    <td> {{column[2]}} </td>
+    <td> {{column[3]}} </td>
+  </tr>
+  {% endfor %}
+</table>

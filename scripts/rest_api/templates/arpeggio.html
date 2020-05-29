@@ -1,0 +1,45 @@
+<h1> Music-Code API</h1>
+<h3> Arpeggio Table</h3>
+<table border = 1>
+  <tr>
+    <th>ArpeggioID</th>
+    <th>ChordLabel</th>
+    <th>RootNote</th>
+    <th>WaveType</th>
+    <th>WtPos</th>
+    <th>Rhythm</th>
+    <th>Duration</th>
+    <th>ArpType</th>
+    <th>TonalSystem</th>
+    <th>FadeIn</th>
+    <th>FadeOut</th>
+    <th>InCurve</th>
+    <th>OutCurve</th>
+    <th>BPM</th>
+    <th>TimeMode</th>
+    <th>UserID</th>
+    <th>EventDateTime</th>
+  </tr>
+    
+  {% for column in all_columns %}
+  <tr>
+    <td> {{column[0]}} </td>
+	<td> {{column[1]}} </td>
+    <td> {{column[2]}} </td>
+    <td> {{column[3]}} </td>
+    <td> {{column[4]}} </td>
+    <td> {{column[5]}} </td>
+    <td> {{column[6]}} </td>
+    <td> {{column[7]}} </td>
+    <td> {{column[8]}} </td>
+    <td> {{column[9]}} </td>
+    <td> {{column[10]}} </td>
+    <td> {{column[11]}} </td>
+    <td> {{column[12]}} </td>
+    <td> {{column[13]}} </td>
+    <td> {{column[14]}} </td>
+    <td> {{column[15]}} </td>
+    <td> {{column[16]}} </td>
+  </tr>
+  {% endfor %}
+</table>
