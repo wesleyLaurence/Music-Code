@@ -35,8 +35,8 @@ jupyter
 `pip install music-code`
 
 ### Set Program Files Path
-1. Open music_code.py in your conda environment. On my computer, the file is located here: C:\Users\wesle\Anaconda3\envs\music_code\Lib\site-packages\music_code\music_code.py
-2. Go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1HCCqBaiAlhgpqMP7qnceEMxLg-eGJqEa/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
+1. Open your Anaconda3 folder, and locate the music_code installation. For my machine, the file is located here: <b>C:\Users\wesle\Anaconda3\envs\music_code\Lib\site-packages\music_code\music_code.py</b>
+2. Open music_code.py, go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1HCCqBaiAlhgpqMP7qnceEMxLg-eGJqEa/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
 
 ### MySQL (optional)
 Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. To create the Music-Code MySQL database, see the create_database.sql file.
