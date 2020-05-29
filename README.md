@@ -30,7 +30,7 @@ psutil==5.7.0
 jupyter
 
 ### Installation
-<b>pip install music-code </b>
+`pip install music-code`
 
 ### Set Program Files Path
 1. Open music_code.py in your conda environment. On my computer, the file is located here: C:\Users\wesle\Anaconda3\envs\music_code\Lib\site-packages\music_code\music_code.py
