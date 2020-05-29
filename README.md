@@ -1,4 +1,4 @@
-# Music-Code Documentation
+# Music-Code
 
 Welcome to the Music-Code documentation. Music-Code is a python library for creating music. You can create musical notes, intervals, chords, progressions, melodies, bass lines, drum beats and full songs! You can also generated complex waveform visualizations for images and video. Music-Code is integrated with MySQL and provides and analytics dashboard to monitor system usage and data trends.
 
