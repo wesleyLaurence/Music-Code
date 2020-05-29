@@ -1,14 +1,3 @@
-Steps:
-
-1. Install MySQL
-
-2. Create database schema named MusicCode
-
-3. Here are the create table statements:
-
-
-### MUSIC-CODE TABLES
-
 CREATE TABLE CreateWave (
 WaveID INT NOT NULL AUTO_INCREMENT,
 NoteLabels VARCHAR(500) NOT NULL, 
@@ -31,7 +20,6 @@ UserID VARCHAR(50) NOT NULL,
 EventDateTime DATETIME NOT NULL,
 CONSTRAINT PK_RestID PRIMARY KEY (RestID) 
 );
-
 
 CREATE TABLE Sequence (
 SequenceID INT NOT NULL AUTO_INCREMENT,
@@ -104,10 +92,6 @@ UserID VARCHAR(50) NOT NULL,
 EventDateTime DATETIME NOT NULL,
 CONSTRAINT PK_SampleID PRIMARY KEY (SampleID) 
 );
-
-
-
-### WAVE TABLES
 
 CREATE TABLE LoopMethod (
 LoopID INT NOT NULL AUTO_INCREMENT,
