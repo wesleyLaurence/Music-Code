@@ -1,6 +1,6 @@
 # Music-Code
 
-Welcome to the Music-Code documentation. Music-Code is a python library for creating music. You can create musical notes, intervals, chords, progressions, melodies, bass lines, drum beats and full songs! You can also generated complex waveform visualizations for images and video. Music-Code is integrated with MySQL and provides and analytics dashboard to monitor system usage and data trends.
+Music-Code is a python library for creating music. You can create musical notes, chords, progressions, melodies, bass lines, drum beats, sound design and full songs! You can also generated complex waveform visualizations for images and video. Music-Code is integrated with MySQL and provides and analytics dashboard to monitor system usage and data trends.
 
 ## Setup
 
@@ -37,7 +37,7 @@ jupyter
 2. Go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1HCCqBaiAlhgpqMP7qnceEMxLg-eGJqEa/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
 
 ### MySQL (optional)
-Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. To create the Music-Code MySQL database, see the database.txt file.
+Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. To create the Music-Code MySQL database, see the create_database.sql file.
 
 ### Test
 Run the tests.py file inside your conda environment to ensure the all systems are working properly.
