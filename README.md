@@ -43,5 +43,5 @@ Connect Music-Code to a MySQL database to archive all system data and have acces
 Run the tests.py file inside your conda environment to ensure the all systems are working properly.
 
 ## Jupyter Notebook Tutorials
-Check out the jupyter notebooks tutorials. These demonstrate all the capabilities of the Music-Code library.
+Check out the jupyter notebook tutorials. These demonstrate all the capabilities of the Music-Code library.
 
