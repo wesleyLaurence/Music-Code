@@ -7,7 +7,7 @@ You can use Music-Code to automatically produce large audio datasets for use in 
 ## Setup
 
 ### Download Program Files
-First, download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1HCCqBaiAlhgpqMP7qnceEMxLg-eGJqEa/view?usp=sharing). Store the program files in a memorable location, then copy the file path (you will need this in a moment).
+First, download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Store the program files in a memorable location, then copy the file path (you will need this in a moment).
 
 ### Create Anaconda Environment
 Anaconda is the optimal way to run Music-Code. 
@@ -36,7 +36,7 @@ jupyter
 
 ### Set Program Files Path
 1. Open your Anaconda3 folder, and locate the music_code installation. For my machine, the file is located here: <b>C:\Users\wesle\Anaconda3\envs\music_code\Lib\site-packages\music_code\music_code.py</b>
-2. Open music_code.py, go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1HCCqBaiAlhgpqMP7qnceEMxLg-eGJqEa/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
+2. Open music_code.py, go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
 
 ### MySQL (optional)
 Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. To create the Music-Code MySQL database, see the create_database.sql file.
@@ -44,6 +44,6 @@ Connect Music-Code to a MySQL database to archive all system data and have acces
 ### Test
 Run the tests.py file inside your conda environment to ensure the all systems are working properly.
 
-## Jupyter Notebook Tutorials
+### Jupyter Notebook Tutorials
 Check out the jupyter notebook tutorials. These demonstrate all the capabilities of the Music-Code library.
 
