@@ -13,10 +13,7 @@ Anaconda is the recommended way to run Music-Code.
 3. Activate music_code environment
 4. Install the following requirements:
 
-### Installation
-`pip install music-code`
-
-#### Requirements
+### Requirements
 numpy==1.18.4 
 pandas==1.0.3 
 matplotlib==3.2.1 
@@ -29,7 +26,9 @@ PyAudio==0.2.11
 wave==0.0.2 
 mysql-connector-python==8.0.20 
 psutil==5.7.0 
-jupyter
+
+### Installation
+`pip install music-code`
 
 ### Download Program Files
 Download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Unzip and save the program files in a memorable location. Then copy the file path.
