@@ -230,3 +230,11 @@ class SQL_Kit(object):
             sql = "INSERT INTO delay (Time, Feedback, Mix, Spread, Stereo, Sync, StartSide, BPM, TimeMode, UserID, EventDateTime) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             val = (time, feedback, mix, spread, stereo, sync, start_side, bpm, time_mode, self.userID, datetime.now()) 
             self.insert_row(sql,val)
+            
+    
+    # Chord Net Database
+            
+    def chordlog_table(self, chord_root_note, chord_name_sql, response, actual_label, waveform_type):
+            sql = "INSERT INTO ChordLog (RootNote, ChordName, PredictedLabel, ActualLabel, ChordDateTime, WaveType) VALUES (%s, %s, %s, %s, %s, %s)"  
+            val = (chord_root_note, chord_name_sql, response, actual_label, datetime.now(), waveform_type)  
+            self.insert_row(sql,val)
