@@ -1,6 +1,6 @@
 # import music-code modules
-from .music_code import MusicCode
-from .sql_kit import SQL_Kit
+from music_code import MusicCode
+from sql_kit import SQL_Kit
 
 # audio
 import pyaudio
