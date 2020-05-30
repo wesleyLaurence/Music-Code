@@ -33,7 +33,7 @@ psutil==5.7.0
 `pip install music-code`
 
 ### Program Files
-1. Download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Unzip and save the program files in a memorable location. Copy the file path.
+1. Either download/clone this repository or download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Unzip and save the program files in a memorable location. Copy the file path.
 2. Open your Anaconda3 folder, and locate the music_code installation. For my machine, the file is located here: <b>C:\Users\wesle\Anaconda3\envs\music_code\Lib\site-packages\music_code\music_code.py</b>
 3. Open music_code.py, go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
 
