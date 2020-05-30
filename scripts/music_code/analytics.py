@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from .sql_kit import SQL_Kit
+from sql_kit import SQL_Kit
 plt.style.use('seaborn-dark-palette')
 import getpass
 
@@ -86,7 +86,7 @@ class Dashboard:
 
         averages = []
         i=1
-        for dab_count in daily_count:
+        for value_count in daily_count:
             values = daily_count[:i]
             average = round(sum(values)/len(values),2)
             averages.append(average)
