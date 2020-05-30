@@ -2,7 +2,7 @@
 
 Music-Code is a python library for creating music. You can create musical notes, chords, progressions, melodies, bass lines, drum beats, sound design and full songs! It has most of the core features of a digital audio workstation (DAW). In addition to creating music, you can also generate HD waveform visualizations for images and video. Music-Code is integrated with MySQL and provides an analytics dashboard and Rest API to monitor system usage and data trends.
 
-You can use Music-Code to automatically produce large audio datasets for use in deep learning applications. You can scan through different spaces of musical/tonal combinations, exporting each variation as a labeled WAV file. The long term purpose of Music-Code is to create vast musical datasets and build music AI.
+You can use Music-Code to automatically produce large audio datasets for use in deep learning applications. You can scan through different spaces of musical/tonal combinations, exporting each variation as a labeled WAV file. The long term purpose of Music-Code is to build open source music AI software.
 
 ## Setup
 
