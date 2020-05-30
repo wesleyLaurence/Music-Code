@@ -47,4 +47,8 @@ Run the tests.py file inside your conda environment to ensure the all systems ar
 ### Jupyter Notebook Tutorials
 Check out the jupyter notebook tutorials. These demonstrate all the capabilities of the Music-Code library.
 
+### YouTube Tutorial
+Soon I will post a video about geting started with Music-Code!
+
+### Contact
 For any other questions, email wesleylaurencetech@gmail.com
