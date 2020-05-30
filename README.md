@@ -38,7 +38,7 @@ Download the Music-Code program files here: [Music-Code Program Files](https://d
 2. Open music_code.py, go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
 
 ### MySQL (optional)
-Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. For code to create database, go to scripts/database
+Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. 
 
 ### Test
 Run the tests.py file inside your conda environment to ensure the all systems are working properly.
