@@ -6,7 +6,7 @@ You can use Music-Code to automatically produce large audio datasets for use in 
 
 ## Setup
 
-### Create Anaconda Environment
+### Anaconda
 Anaconda is the recommended way to run Music-Code. 
 1. Install [Anaconda](https://www.anaconda.com/products/individual) on your machine
 2. Create new conda environment named music_code
