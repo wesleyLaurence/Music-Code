@@ -7,7 +7,7 @@ You can use Music-Code to automatically produce large audio datasets for use in 
 ## Setup
 
 ### Download Program Files
-First, download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Store the program files in a memorable location, then copy the file path (you will need this in a moment).
+First, download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Unzip and save the program files in a memorable location. Then copy the file path (you will need this in a moment).
 
 ### Create Anaconda Environment
 Anaconda is the optimal way to run Music-Code. 
@@ -47,3 +47,4 @@ Run the tests.py file inside your conda environment to ensure the all systems ar
 ### Jupyter Notebook Tutorials
 Check out the jupyter notebook tutorials. These demonstrate all the capabilities of the Music-Code library.
 
+For any other questions, email wesleylaurencetech@gmail.com
