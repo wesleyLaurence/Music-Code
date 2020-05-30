@@ -8,7 +8,7 @@ Additional credit to Henry Franklin for help with delay & midi, and Owen Burrow 
 """
 
 # MySQL connection
-from .sql_kit import SQL_Kit
+from sql_kit import SQL_Kit
 import mysql.connector
 
 # import libraries
