@@ -8,12 +8,8 @@ You can use Music-Code to automatically produce large audio datasets for use in 
 
 ## Setup
 
-### Anaconda
-Anaconda is the recommended way to run Music-Code. 
-1. Install [Anaconda](https://www.anaconda.com/products/individual) on your machine
-2. Create new conda environment named music_code
-3. Activate music_code environment
-4. Install the following requirements:
+### Installation
+`pip install music-code`
 
 ### Requirements
 numpy==1.18.4 
@@ -28,9 +24,6 @@ PyAudio==0.2.11
 wave==0.0.2 
 mysql-connector-python==8.0.20 
 psutil==5.7.0 
-
-### Installation
-`pip install music-code`
 
 ### Program Files
 1. Either download/clone this repository or download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Unzip and save the program files in a memorable location. Copy the file path.
