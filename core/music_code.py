@@ -7,10 +7,6 @@ Created on Mon Feb 24 16:42:34 2020
 Additional credit to Henry Franklin for help with delay & midi, and Owen Burrow for wavetable positions!
 """
 
-# MySQL connection
-from sql_kit import SQL_Kit
-import mysql.connector
-
 # import libraries
 import numpy as np
 import pandas as pd
@@ -31,6 +27,16 @@ import getpass
 plt.style.use('seaborn-dark-palette')
 
 
+def _sorted_directory_listing(directory):
+    directory = Path(directory)
+    if not directory.exists():
+        return []
+
+    items = os.listdir(directory)
+    items.sort()
+    return items
+
+
 class MusicCode:    
 
     def __init__(self,bpm):
@@ -38,14 +44,15 @@ class MusicCode:
         
         """ User Settings """
         
-        # set file path to your music-code program files location
-        self.program_files_location = 'C:/Users/wesle/Desktop/Code Portfolio/music-code-master_v16/program files/'
+        # Resolve the repo root and the current top-level asset folders.
+        repo_root = Path(__file__).resolve().parents[1]
+        self.program_files_location = str(repo_root) + os.sep
+        self.data_location = repo_root / 'data'
+        self.export_location = repo_root / 'export'
+        self.images_location = repo_root / 'images'
+        self.samples_location = repo_root / 'samples'
+        self.tests_location = repo_root / 'tests'
         
-        # Connect and update MySQL database
-        self.database_connect=False
-        self.userID = None
-        self.password=None
-    
         # sound settings
         self.Fs = 44100          
         self.bpm = bpm     
@@ -55,7 +62,7 @@ class MusicCode:
         """ Music-Code Setup """
         
         # import clean chords dataset
-        chords_blueprint_path = Path(self.program_files_location+'datasets/chords_blueprint.csv')
+        chords_blueprint_path = self.data_location / 'chords_blueprint.csv'
         chords_blueprint = pd.read_csv(chords_blueprint_path, encoding='latin1')
         
         #chords_blueprint = pd.read_excel(self.home_directory+"Program Files\\datasets"+'\\'+'chords_blueprint_v3.xlsx')
@@ -64,7 +71,7 @@ class MusicCode:
         
         # Music Note --> Frequency
         # create dictionary to convert between musical notes and frequencies
-        notes_freqs_path = Path(self.program_files_location+'datasets/frequency_musical notes.csv')
+        notes_freqs_path = self.data_location / 'frequency_musical notes.csv'
         notes_freqs = pd.read_csv(notes_freqs_path, encoding='latin1')
         
         # Sharps
@@ -75,27 +82,18 @@ class MusicCode:
         self.freq_note_table_flat = dict(zip(list(notes_freqs['frequency']), list(notes_freqs['flats'])))
         
         # SET UP SAMPLE LIBRARY
-        self.kick = os.listdir(Path(self.program_files_location+'samples/kick'))
-        self.kick.sort()
-        self.snare = os.listdir(Path(self.program_files_location+'samples/snare'))
-        self.snare.sort()
-        self.clap = os.listdir(Path(self.program_files_location+'samples/clap'))
-        self.clap.sort()
-        self.hihat = os.listdir(Path(self.program_files_location+'samples/hihat'))
-        self.hihat.sort()
-        self.perc = os.listdir(Path(self.program_files_location+'samples/perc'))
-        self.perc.sort()
-        self.cymbal = os.listdir(Path(self.program_files_location+'samples/cymbal'))
-        self.cymbal.sort()
-        self.bass = os.listdir(Path(self.program_files_location+'samples/bass'))
-        self.bass.sort()
-        self.fx = os.listdir(Path(self.program_files_location+'samples/fx'))
-        self.fx.sort()
-        self.user = os.listdir(Path(self.program_files_location+'samples/user')) 
-        self.user.sort()
+        self.kick = _sorted_directory_listing(self.samples_location / 'kick')
+        self.snare = _sorted_directory_listing(self.samples_location / 'snare')
+        self.clap = _sorted_directory_listing(self.samples_location / 'clap')
+        self.hihat = _sorted_directory_listing(self.samples_location / 'hihat')
+        self.perc = _sorted_directory_listing(self.samples_location / 'perc')
+        self.cymbal = _sorted_directory_listing(self.samples_location / 'cymbal')
+        self.bass = _sorted_directory_listing(self.samples_location / 'bass')
+        self.fx = _sorted_directory_listing(self.samples_location / 'fx')
+        self.user = _sorted_directory_listing(self.samples_location / 'user')
         
-        # set up archive library
-        self.archive = os.listdir(Path(self.program_files_location+'archive')) 
+        # set up export library
+        self.archive = _sorted_directory_listing(self.export_location)
         
         
     # GETTERS
@@ -105,9 +103,6 @@ class MusicCode:
     def get_time_mode(self):
         return self.time_mode
     
-    def get_database_connect(self):
-        return self.database_connect
-      
     # SETTERS
     def set_bpm(self, new_bpm):
         self.bpm = new_bpm
@@ -116,13 +111,6 @@ class MusicCode:
         self.time_mode = time_mode   
         
     
-    def connect(self):
-        
-        self.database_connect = True
-        self.userID = input('User ID: ')
-        self.password = getpass.getpass('Password: ')
-
-        
     # Sound Wave Generator
     def create_wave(self, note_labels, wave_type, duration, wt_pos=1, wave_context="create_wave"):
         
@@ -208,22 +196,13 @@ class MusicCode:
         while abs(final_waveform).max() > 1:
             final_waveform = final_waveform*.75
 
-        # convert to wave object    
-        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
+        # convert to wave object
+        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location)
         
         # subtle fade in to avoid audible clicks and pops
         self.waveform = self.waveform.fade(fade_in=1/128,fade_out=1/128)
         
         
-        # update MySQL database 
-        if self.database_connect == True and wave_context=='create_wave':
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.createwave_table(note_labels, wave_type, wt_pos, duration, self.get_bpm(), self.get_time_mode())     
-            
-        # if no database connection, pass
-        else:
-            pass
-          
         return self.waveform
 
     # Wave Sequencer
@@ -317,15 +296,7 @@ class MusicCode:
 
 
         master_wave = master_wave[:total_samples]
-        self.waveform = Wave(master_wave, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True and wave_context=='sequence':
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.sequence_table(note_labels, wave_type, wt_pos, rhythm, duration, arp_type, fade_in, fade_out, in_curve, out_curve, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(master_wave, self.bpm, self.time_mode, self.program_files_location)
            
         return self.waveform
       
@@ -346,15 +317,7 @@ class MusicCode:
         else:
             rhythm_duration = duration
         
-        self.waveform = Wave(np.zeros(round(self.Fs*rhythm_duration)), self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)   
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.rest_table(duration, self.bpm, self.time_mode)     
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(np.zeros(round(self.Fs*rhythm_duration)), self.bpm, self.time_mode, self.program_files_location)
             
         return self.waveform
         
@@ -420,15 +383,7 @@ class MusicCode:
 
         #sequence(self, note_labels, wave_type, rhythm, duration, arp_type = 'up', pan_pos = 'C', fade_type='line', fade_length = 1/128, curve_slope = 3, fade_in=True, fade_out=True, wt_pos=1)
         final_waveform = self.sequence(degree_freqs_main,wave_type=wave_type,rhythm=rhythm,duration=duration,arp_type=arp_type,fade_in=fade_in,in_curve=in_curve,fade_out=fade_out,out_curve=out_curve, wt_pos=wt_pos,wave_context='arpeggio')
-        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.arpeggio_table(chord_label, start_note, wave_type, rhythm, duration, tonal_system, arp_type, fade_in, fade_out, in_curve, out_curve, wt_pos, self.bpm, self.time_mode)     
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
     
@@ -488,16 +443,8 @@ class MusicCode:
 
         final_waveform = self.create_wave(degree_freqs_main,wave_type,duration,wt_pos=wt_pos,wave_context='chord')
         
-        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
+        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location)
         self.waveform = self.waveform.fade(fade_in=fade_in,fade_out=fade_out,in_curve=in_curve ,out_curve=out_curve)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.chord_table(chord_label, start_note, wave_type, duration, tonal_system, fade_in, fade_out, in_curve, out_curve, wt_pos, self.bpm, self.time_mode)     
-        # if no database connection, pass
-        else:
-            pass
         
         return self.waveform
     
@@ -532,7 +479,7 @@ class MusicCode:
              master = np.concatenate(waves_tuple)
         
         self.waveform = master
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)
         
         
         return self.waveform
@@ -589,7 +536,7 @@ class MusicCode:
             master = master*.75
         
         self.waveform = master 
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)
             
         return self.waveform
     
@@ -610,105 +557,90 @@ class MusicCode:
             if sound_folder == 'kick':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/kick/'+sample_id)
+                    file_path = self.samples_location / 'kick' / sample_id
                 # if user passes in file id in integer format
                 elif isinstance(sample_id,int):
-                    file_path = Path(self.program_files_location+'samples/kick/'+self.kick[sample_id])
+                    file_path = self.samples_location / 'kick' / self.kick[sample_id]
                    
             elif sound_folder == 'snare':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/snare/'+sample_id)
+                    file_path = self.samples_location / 'snare' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/snare/'+self.snare[sample_id])
+                    file_path = self.samples_location / 'snare' / self.snare[sample_id]
              
             elif sound_folder == 'clap':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/clap/'+sample_id)
+                    file_path = self.samples_location / 'clap' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/clap/'+self.clap[sample_id])
+                    file_path = self.samples_location / 'clap' / self.clap[sample_id]
               
             elif sound_folder == 'hihat':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/hihat/'+sample_id)
+                    file_path = self.samples_location / 'hihat' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/hihat/'+self.hihat[sample_id])
+                    file_path = self.samples_location / 'hihat' / self.hihat[sample_id]
               
             elif sound_folder == 'perc':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/perc/'+sample_id)
+                    file_path = self.samples_location / 'perc' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/perc/'+self.perc[sample_id])
+                    file_path = self.samples_location / 'perc' / self.perc[sample_id]
               
             elif sound_folder == 'cymbal':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/cymbal/'+sample_id)
+                    file_path = self.samples_location / 'cymbal' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/cymbal/'+self.cymbal[sample_id])     
+                    file_path = self.samples_location / 'cymbal' / self.cymbal[sample_id]
                 
             elif sound_folder == 'bass':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/bass/'+sample_id)
+                    file_path = self.samples_location / 'bass' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/bass/'+self.bass[sample_id])
+                    file_path = self.samples_location / 'bass' / self.bass[sample_id]
                 
             elif sound_folder == 'user':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/user/'+sample_id)
+                    file_path = self.samples_location / 'user' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/user/'+self.user[sample_id])
+                    file_path = self.samples_location / 'user' / self.user[sample_id]
               
             elif sound_folder == 'fx':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/fx/'+sample_id)
+                    file_path = self.samples_location / 'fx' / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/fx/'+self.fx[sample_id])   
+                    file_path = self.samples_location / 'fx' / self.fx[sample_id]
               
             elif sound_folder == 'archive':
                 # if user passes in file name in string format
                 if isinstance(sample_id,str):
-                    file_path = Path(self.program_files_location+'samples/archive/'+sample_id)
+                    file_path = self.export_location / sample_id
                 # if user passes in file id in integer format
                 else:
-                    file_path = Path(self.program_files_location+'samples/user/'+self.user[sample_id])
+                    file_path = self.export_location / self.archive[sample_id]
             
             data, sr = sf.read(file_path)    
         
         except:
             print('Sample could not be found')
                 
-        self.waveform = Wave(data, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
+        self.waveform = Wave(data, self.bpm, self.time_mode, self.program_files_location)
         duration_seconds = len(self.waveform)/self.Fs
-        
-        # SQL data
-        file_name = str(file_path).split('\\')[-1]
-        duration = round(self.waveform.shape[0]/self.Fs, 3)
-        num_channels = int(self.waveform.ndim)
-        sample_rate = int(sr)
-        max_vol = round(float(self.waveform.max()),3)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.sample_table(sound_folder, file_name, duration, num_channels, sample_rate, max_vol)     
-        # if no database connection, pass
-        else:
-            pass
         
         return self.waveform
             
@@ -721,7 +653,7 @@ class Wave(np.ndarray):
     # initialize wave data type
     # sub class of np.array
     
-    def __new__(cls, waveform, bpm, time_mode, program_files_location, database_connect, userID, password):
+    def __new__(cls, waveform, bpm, time_mode, program_files_location):
         # Input array is an already formed ndarray instance
         # We first cast to be our class type
         obj = np.asarray(waveform).view(cls)
@@ -737,25 +669,27 @@ class Wave(np.ndarray):
        
     # Initialize all variables and import data
     
-    def __init__(self, waveform, bpm, time_mode, program_files_location, database_connect, userID, password):
+    def __init__(self, waveform, bpm, time_mode, program_files_location):
       
         self.waveform = waveform
         self.bpm = bpm
         self.time_mode = time_mode
         self.program_files_location = program_files_location
-        self.database_connect = database_connect
-        self.userID = userID
-        self.password = password
+        self.data_location = Path(self.program_files_location) / 'data'
+        self.export_location = Path(self.program_files_location) / 'export'
+        self.images_location = Path(self.program_files_location) / 'images'
+        self.samples_location = Path(self.program_files_location) / 'samples'
+        self.tests_location = Path(self.program_files_location) / 'tests'
         
         # Music Note --> Frequency
         # create dictionary to convert between musical notes and frequencies
-        notes_freqs = pd.read_csv(Path(self.program_files_location+'datasets/frequency_musical notes.csv'), encoding='latin1')  
+        notes_freqs = pd.read_csv(self.data_location / 'frequency_musical notes.csv', encoding='latin1')
         
         # default sample rate
         self.Fs = 44100 
         
-        # set up archive library
-        self.archive = os.listdir(Path(program_files_location+'archive'))      
+        # set up export library
+        self.archive = _sorted_directory_listing(self.export_location)
     
     
     def time(self):
@@ -765,27 +699,11 @@ class Wave(np.ndarray):
         
         waveform_duration_seconds = round(len_in_seconds,3)
         
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.timemethod_table(waveform_duration_seconds, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
-        
         return print(waveform_duration_seconds)
     
     
     def vol(self, volume_level):
-        self.waveform = Wave(self.waveform*volume_level, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.volume_table(volume_level)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(self.waveform*volume_level, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
     
@@ -797,7 +715,7 @@ class Wave(np.ndarray):
         
         data = self.waveform
         
-        wav_files = os.listdir(Path(self.program_files_location+'archive'))
+        wav_files = _sorted_directory_listing(self.export_location)
 
         if file_name in wav_files:
             file_name = file_name[:-4] + '_'+str(1)+'.wav'
@@ -814,7 +732,7 @@ class Wave(np.ndarray):
             file_name = '_'.join(file_name_items)+'.wav'
  
         length_seconds = data.shape[0]/sample_rate
-        file_path = Path(self.program_files_location+'archive/'+file_name)
+        file_path = self.export_location / file_name
         
         sf.write(file_path, data, sample_rate)        
         
@@ -854,20 +772,6 @@ class Wave(np.ndarray):
         else:
             pass
         
-        # SQL data
-        duration = round(self.waveform.shape[0]/self.Fs, 3)
-        max_vol = round(float(self.waveform.max()),3)
-        num_channels = int(self.waveform.ndim)
-        
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.bounce_table(file_name, duration, sample_rate, num_channels, max_vol)      
-        # if no database connection, pass
-        else:
-            pass
-          
         return ipd.Audio(file_path)
     
     
@@ -961,17 +865,6 @@ class Wave(np.ndarray):
             elif 'spectrum' in plot_type:
                 spectrum(self.waveform)
                        
-        duration = round(self.waveform.shape[0]/self.Fs, 3)    
-        
-            # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.view_table(duration)      
-        # if no database connection, pass
-        else:
-            pass
-        
-        
     """ Digital Signal Processing """
     
     def time_edit(self, duration,slice_from_end=False,mode='relative'):
@@ -1033,15 +926,7 @@ class Wave(np.ndarray):
             else:
                 self.waveform = self.waveform[:samples]
 
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.timeedit_table(original_duration_seconds, new_time, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
     
@@ -1055,32 +940,13 @@ class Wave(np.ndarray):
         else:
             self.waveform = np.tile(self.waveform,num_loops)
             
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)    
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.loopmethod_table(num_loops, self.waveform.ndim, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)    
         
         return self.waveform 
     
     
     def reverse(self):
-        self.waveform = Wave(np.flip(self.waveform), self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        len_in_seconds = self.waveform.shape[0]/self.Fs
-        waveform_duration_seconds = round(len_in_seconds,3)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.reverse_table(waveform_duration_seconds, self.waveform.ndim, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(np.flip(self.waveform), self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
    
@@ -1131,15 +997,7 @@ class Wave(np.ndarray):
                 stereo_wave =self.waveform
                 
         self.waveform = stereo_wave
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.pan_table(sql_pan_pos)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform 
     
@@ -1302,15 +1160,7 @@ class Wave(np.ndarray):
                 self.waveform[-int(100):] = self.waveform[-int(100):]*fade_out_wave 
         
         # update wave object
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.fade_table(fade_in, fade_out, in_curve, out_curve, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
     
@@ -1344,15 +1194,7 @@ class Wave(np.ndarray):
             
             waveform = np.array([filtered_l,filtered_r]).T
        
-        self.waveform = Wave(waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.LPF_table(cutoff, order)     
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(waveform, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
     
@@ -1390,20 +1232,12 @@ class Wave(np.ndarray):
             warnings.warn("deprecated", DeprecationWarning)
         
         self.waveform = filtered_wave
-        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
+        self.waveform = Wave(self.waveform, self.bpm, self.time_mode, self.program_files_location)
         
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             fxn()
             
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.HPF_table(cutoff, order)      
-        # if no database connection, pass
-        else:
-            pass
-        
         return self.waveform
     
     
@@ -1420,16 +1254,19 @@ class Wave(np.ndarray):
             LFO_waveform = np.array([LFO_waveform,LFO_waveform]).T
         else:
             pass
+        target_length = len(self.waveform)
+        lfo_length = len(LFO_waveform)
+        if lfo_length > target_length:
+            LFO_waveform = LFO_waveform[:target_length]
+        elif lfo_length < target_length:
+            pad_length = target_length - lfo_length
+            if np.asarray(LFO_waveform).ndim == 2:
+                padding = np.zeros((pad_length, LFO_waveform.shape[1]))
+            else:
+                padding = np.zeros(pad_length)
+            LFO_waveform = np.concatenate((LFO_waveform, padding))
         final_waveform = self.waveform*LFO_waveform
-        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.lfo_table(freq, wave_type, wt_pos, vol)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(final_waveform, self.bpm, self.time_mode, self.program_files_location)
         
         return self.waveform
     
@@ -1497,14 +1334,6 @@ class Wave(np.ndarray):
             vol_change = round(1-(iteration/feedback),3) # changes volume
             LorR = not LorR #Switches value of the start_side bool
 
-        self.waveform = Wave(master_waveform, self.bpm, self.time_mode, self.program_files_location, self.database_connect, self.userID, self.password)
-        
-        # update MySQL database 
-        if self.database_connect == True:
-            db = SQL_Kit(userID=self.userID, password=self.password, database='musiccode')
-            db.delay_table(time, feedback, mix, spread, stereo, sync, start_side, self.bpm, self.time_mode)      
-        # if no database connection, pass
-        else:
-            pass
+        self.waveform = Wave(master_waveform, self.bpm, self.time_mode, self.program_files_location)
 
         return self.waveform

@@ -1,8 +1,18 @@
-# import library
-from music_code import music_code
+from pathlib import Path
+import sys
+
+import matplotlib
+
+matplotlib.use("Agg")
+
+# Import the local core module from the current repo layout.
+LIB_DIR = Path(__file__).resolve().parents[1] / "core"
+sys.path.insert(0, str(LIB_DIR))
+
+from music_code import MusicCode
 
 # initialize MusiCode, set BPM
-m = music_code.MusicCode(bpm=120)
+m = MusicCode(bpm=120)
 
 """ Test MusicCode and Wave class methods"""
     
