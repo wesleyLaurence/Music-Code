@@ -1,0 +1,96 @@
+chord,voicing_1
+maj triad,0 4 7
+maj 6,0 4 7 9
+maj 7,0 4 7 11
+maj 9,0 4 7 11 14
+maj 6 9,0 4 7 9 14
+maj 11,0 4 7 11 14 17
+maj 13,0 4 7 11 17 21
+maj 7 b5,0 4 6 11
+maj 7 #5,0 4 8 11
+maj 7 b9,0 4 7 11 13
+maj 7 #9,0 4 7 11 15
+maj 7 b5 b9,0 4 6 11 13
+maj 7 #5 #9,0 4 8 15
+maj 7 #11,0 4 7 11 14 18
+maj 7 b13,0 4 7 11 17 20
+maj 7 #13,0 4 7 11 17 22
+min triad,0 3 7
+min 6,0 3 9
+min 7,0 3 7 10
+min 9,0 3 7 10 14
+min 6 9,0 3 9 14
+min 11,0 3 7 10 14 17
+min 13,0 3 7 10 14 17 21
+min 7 b5,0 3 6 10
+min 7 #5,0 3 8 10
+min 7 b9,0 3 7 10 13
+min 7 #9,0 3 7 10 15
+min 7 b5 b9,0 3 6 11 13
+min 7 #5 #9,0 3 8 15
+min 7 #11,0 3 7 10 14 18
+min 7 b13,0 3 7 10 14 17 20
+min 7 #13,0 3 7 10 14 17 22
+dominant 7,0 4 7 10
+dominant 9,0 4 7 10 14
+dominant 6 9,0 3 9 14
+dominant 11,0 4 7 10 14 17
+dominant 13,0 4 7 10 14 17 21
+dominant 7 b5,0 4 6 10
+dominant 7 #5,0 4 8 10
+dominant 7 b9,0 4 7 10 13
+dominant 7 #9,0 4 7 10 15
+dominant 7 b5 b9,0 4 6 11 13
+dominant 7 #5 #9,0 4 8 15
+dominant 7 #11,0 4 7 10 14 18
+dominant 7 b13,0 4 7 10 14 17 20
+dominant 7 #13,0 4 7 10 14 17 22
+augment triad,0 4 8
+augment 7,0 4 8 10
+augment 9,0 4 8 10
+augment 6 9,0 4 8 14
+augment 11,0 4 8 10 14 17
+augment 13,0 4 8 10 14 17 21
+augment 7 b9,0 4 8 10 13
+augment 7 #9,0 4 8 10 15
+augment 7 b5 b9,0 3 6 11 13
+augment 7 #5 #9,0 3 8 15
+augment 7 #11,0 4 8 10 14 18
+augment 7 b13,0 4 8 10 14 17 20
+augment 7 #13,0 4 8 10 14 17 22
+diminish triad,0 3 6
+diminish 6,0 3 6 9
+diminish 7,0 3 6 10
+diminish 9,0 3 6 10 14
+diminish 6 9,0 3 6 8 10 14
+diminish 11,0 3 6
+diminish 13,0 3 6
+diminish 7 b9,0 3 6 10 13
+diminish 7 #9,0 3 6 10 15
+diminish 7 b9,0 3 6 10 13
+diminish 7 #9,0 3 6 10 15
+diminish 7 #11,0 3 6 10 14 18
+diminish 7 b13,0 3 6 10 14 17 20
+diminish 7 #13,0 3 6 10 14 17 22
+dream chord,0 5 6 7
+elektra chord,0 7 9 13 16
+farben chord,0 8 11 16 21
+French sixth,0 4 6 10
+German sixth,0 4 7 10
+Italian sixth,0 4 10
+lydian chord,0 4 7 11 18
+magic chord,0 1 5 6 10 12 15 17
+mystic chord,0 6 10 16 21 26
+mu chord,0 2 4 7
+neopolitan chord,1 5 8
+northern lights chord,1 2 8 12 15 18 19 22 23 26 31
+ode to Napoleon,0 1 4 5 8 9
+petrushka chord,0 1 4 6 7 10
+power chord,0 7 
+pslams chord,0 3 7
+seven six chord,0 4 7 9 10
+seventh suspended four,0 5 7 10
+suspended chord,0 5 7
+so what chord,0 5 10 15 19
+tristan chord,0 3 6 10
+viennese trichord,0 6 7
