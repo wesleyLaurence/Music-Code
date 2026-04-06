@@ -1,43 +1,201 @@
 # Music-Code
 
-Music-Code is a python library for creating music. You can create musical notes, chords, progressions, melodies, bass lines, drum beats, sound design and full songs! There is a sequencer, arpeggiator, chord generator, audio sampler and various audio effects. There are also tools for time editing and arranging within a given BPM. It has most of the core features of a digital audio workstation (DAW). 
+Music-Code is a Python toolkit for making music with code. It combines simple synthesis, chord and sequence generation, sample playback, basic DSP, waveform inspection, and WAV export in a single local project.
 
-In addition to creating music, you can also generate HD waveform visualizations for images and video. Music-Code is integrated with MySQL and provides an analytics dashboard and Rest API to monitor system usage and data trends.
+The repository includes the core library, bundled musical lookup data, sample libraries, notebooks, and example output. You can use it to sketch beats, build layered arrangements, experiment with timbre, or generate audio programmatically for larger workflows.
 
-You can use Music-Code to automatically produce large audio datasets for use in deep learning applications. You can scan through different spaces of musical/tonal combinations, exporting each variation as a labeled WAV file. The long term purpose of Music-Code is to build open source music AI software.
+## Core Idea
+
+Music-Code revolves around two classes:
+
+- `MusicCode`: creates musical material at a given BPM
+- `Wave`: represents audio and provides editing, analysis, and export methods
+
+The usual workflow is:
+
+1. Create a `MusicCode` object.
+2. Generate audio with notes, chords, arpeggios, sequences, rests, or samples.
+3. Combine sounds with `join_waves()` for arrangement and `add_waves()` for layering.
+4. Shape the result with `Wave` methods like `fade()`, `pan()`, `LPF()`, `HPF()`, `LFO()`, `delay()`, or `time_edit()`.
+5. Export the final result with `bounce()`.
+
+## Repository Layout
+
+- `core/music_code.py`: main library module
+- `data/`: chord definitions and note-to-frequency lookup data
+- `samples/`: built-in WAV sample library
+- `export/`: rendered WAV files
+- `images/`: saved waveform artwork examples
+- `songs/song_1.py`: example composition script
+- `tests/tests.py`: smoke-style regression script
+- `notebooks/tutorials/`: tutorial notebooks
+- `notebooks/visualize/`: visualization notebooks
+
+The library resolves its data, sample, image, and export paths relative to the repository, so the folder structure should stay intact.
 
 ## Setup
 
-### Installation
-`pip install music-code`
+The project does not currently ship with packaging metadata or a lockfile, so install the runtime dependencies in your Python environment directly.
 
-### Requirements
-numpy==1.18.4 
-pandas==1.0.3 
-matplotlib==3.2.1 
-seaborn==0.10.1 
-soundfile==0.10.3.post1 
-scipy==1.4.1 
-sklearn==0.0 
-datetime==4.3 
-PyAudio==0.2.11 
-wave==0.0.2 
-mysql-connector-python==8.0.20 
-psutil==5.7.0 
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install numpy pandas matplotlib scipy scikit-learn soundfile ipython seaborn
+```
 
-### Program Files
-1. Either download/clone this repository or download the Music-Code program files here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Unzip and save the program files in a memorable location. Copy the file path.
-2. Open your Anaconda3 folder, and locate the music_code installation. For my machine, the file is located here: <b>C:\Users\wesle\Anaconda3\envs\music_code\Lib\site-packages\music_code\music_code.py</b>
-3. Open music_code.py, go to line 42, in the MusicCode __init__ function, find the <b>program_files_location</b> attribute. Copy and paste the file path to your program files folder, which you can download here: [Music-Code Program Files](https://drive.google.com/file/d/1C1st6FFar_-QhCX9AW04DyAHwOtLP5nT/view?usp=sharing). Once this path is set, the Music-Code file system is good to go. The program files folder contains the Music-Code sample library and datasets. All the WAV files and images you create are stored in this folder.
+Music-Code was smoke-tested here with `python3` 3.8.13.
 
-### MySQL (optional)
-Connect Music-Code to a MySQL database to archive all system data and have access to an analytics dashboard. There is also a flask rest API for database access.
+## Quick Start
 
-### Test
-Run the tests.py file inside your conda environment to ensure the all systems are working properly.
+Render the example song:
 
-### Jupyter Notebook Tutorials
-Check out the jupyter notebook tutorials. These demonstrate all the capabilities of the Music-Code library.
+```bash
+python3 songs/song_1.py
+```
 
-### Contact
-For any other questions, email wesleylaurencetech@gmail.com
+Run the smoke test script:
+
+```bash
+python3 tests/tests.py
+```
+
+Rendered audio is written to `export/`.
+
+## Minimal Example
+
+```python
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path("core").resolve()))
+
+from music_code import MusicCode
+
+m = MusicCode(120)
+
+kick = m.sample("kick", "kick_06.wav").time_edit(1 / 8)
+snare = m.sample("snare", "snare_04.wav").time_edit(1 / 8)
+
+drums = m.add_waves(
+    (
+        m.join_waves((kick, m.rest(1 / 8), kick, m.rest(1 / 8))),
+        m.join_waves((m.rest(1 / 4), snare, m.rest(1 / 4))),
+    )
+)
+
+pad = m.chord("min 9", "D3", "sine-tri", duration=1).fade(fade_in=1 / 16, fade_out=1 / 16)
+bass = m.sequence(["D2", "D2", "A1", "C2"], "square", rhythm=1 / 4, duration=1).LPF(180)
+
+song = m.add_waves((drums, pad, bass)).vol(0.8)
+song.bounce("demo.wav", show_visual=False)
+```
+
+## How Timing Works
+
+- `MusicCode` defaults to `relative` time mode.
+- In relative mode, durations are measured in bars relative to BPM.
+- For example, `1 / 4` means a quarter of a bar, `1` means one full bar, and `4` means four bars.
+- You can switch to absolute timing by setting `m.time_mode = "absolute"`, in which case durations are interpreted as seconds.
+
+The engine uses a sample rate of `44100` Hz.
+
+## What `MusicCode` Builds
+
+The main creation methods are:
+
+- `create_wave(note_labels, wave_type, duration, wt_pos=1)`
+- `sequence(note_labels, wave_type, rhythm, duration, ...)`
+- `rest(duration)`
+- `chord(chord_label, start_note, wave_type, duration, ...)`
+- `arpeggio(chord_label, start_note, wave_type, rhythm, duration, ...)`
+- `join_waves(waves_tuple)`
+- `add_waves(waves_tuple)`
+- `sample(sound_folder, sample_id)`
+
+Notes can be passed as note names like `"C3"` or `"F#4"`, or as raw frequencies in Hz.
+
+Available waveform types include:
+
+- `sine`
+- `tri`
+- `saw1`
+- `saw2`
+- `square`
+- blended forms such as `sine-tri`, `sine-saw`, `sine-square`, `saw-square`, `tri-saw`, and `tri-square`
+
+## What `Wave` Does
+
+`Wave` is a subclass of `numpy.ndarray`, so audio is represented directly as sample data while still exposing music-focused helper methods.
+
+Common `Wave` methods include:
+
+- `vol()`
+- `time()`
+- `bounce()`
+- `view()`
+- `time_edit()`
+- `loop()`
+- `reverse()`
+- `pan()`
+- `fade()`
+- `LPF()`
+- `HPF()`
+- `LFO()`
+- `delay()`
+
+These methods are chainable because they return new `Wave` objects.
+
+## Arrangement And Mixing
+
+- `join_waves()` places sounds back-to-back to build a sequence or song structure.
+- `add_waves()` mixes sounds together to create harmony, layered drums, stereo stacks, or combined textures.
+- If stereo and mono waves are mixed together, mono sources are expanded to stereo automatically.
+- When `add_waves()` combines different lengths, it trims to the shortest input.
+
+## Samples
+
+The bundled sample folders are:
+
+- `kick`
+- `snare`
+- `clap`
+- `hihat`
+- `perc`
+- `cymbal`
+- `bass`
+- `fx`
+- `user`
+
+Use `sample(sound_folder, sample_id)` with either:
+
+- an integer index to select from the sorted folder contents
+- a file name string to load a specific WAV
+
+The special folder name `archive` loads previously exported files from `export/`.
+
+## Export And Visualization
+
+- `bounce()` writes WAV files to `export/`
+- if a file name already exists, Music-Code automatically increments the name
+- `view()` can show waveform, spectrum, and spectrogram plots
+
+If you are running in a headless environment, `MPLBACKEND=Agg` can help with Matplotlib output.
+
+## Included Content
+
+- chord and interval data in `data/`
+- note-to-frequency mappings in `data/`
+- a built-in sample library in `samples/`
+- example renders in `export/`
+- waveform image examples in `images/`
+- tutorial and visualization notebooks in `notebooks/`
+
+## Where To Start
+
+- Read `songs/song_1.py` for a complete example arrangement
+- Read `core/music_code.py` for the full API
+- Run `tests/tests.py` for a broad smoke pass across the synthesis and effect methods
+
+## Contact
+
+For questions about the project, email wesleylaurencetech@gmail.com.
